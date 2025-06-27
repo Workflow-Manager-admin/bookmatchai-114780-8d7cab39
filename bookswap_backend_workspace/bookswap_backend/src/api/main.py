@@ -1,11 +1,16 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from typing import Annotated
 from ..database import engine, get_db
 from .. import models
+from ..auth.clerk_utils import verify_clerk_token, ClerkUserInfo
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
+
+# Type alias for authenticated user dependency
+AuthenticatedUser = Annotated[ClerkUserInfo, Depends(verify_clerk_token)]
 
 
 app = FastAPI(
@@ -16,6 +21,7 @@ app = FastAPI(
     ),
     version="1.0.0"
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,3 +43,19 @@ def health_check(db: Session = Depends(get_db)):
         return {"status": "healthy", "database": "connected"}
     except Exception as e:
         return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
+
+
+@app.get("/protected/me", response_model=dict)
+async def get_user_info(
+    user: AuthenticatedUser,
+    db: Session = Depends(get_db)
+):
+    """
+    Protected route example - Get authenticated user info
+    Requires valid Clerk JWT token
+    """
+    return {
+        "user_id": user.clerk_user_id,
+        "email": user.email,
+        "username": user.username
+    }
