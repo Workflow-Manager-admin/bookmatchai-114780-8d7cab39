@@ -7,6 +7,7 @@ from .. import models
 from ..auth.clerk_utils import verify_clerk_token, ClerkUserInfo
 from .profiles import router as profiles_router
 from .books import router as books_router
+from .swap_offers import router as swap_offers_router
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -36,6 +37,7 @@ app.add_middleware(
 # Include routers
 app.include_router(profiles_router)
 app.include_router(books_router)
+app.include_router(swap_offers_router)
 
 
 @app.get("/")
