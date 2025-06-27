@@ -5,6 +5,7 @@ from typing import Annotated
 from ..database import engine, get_db
 from .. import models
 from ..auth.clerk_utils import verify_clerk_token, ClerkUserInfo
+from .profiles import router as profiles_router
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -30,6 +31,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(profiles_router)
 
 
 @app.get("/")

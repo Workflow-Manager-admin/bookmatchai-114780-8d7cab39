@@ -97,7 +97,7 @@ Traceback (most recent call last):
   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/home/kavia/workspace/code-generation/bookmatchai-114780-8d7cab39/bookswap_backend_workspace/bookswap_backend/src/api/main.py", line 8, in <module>
+  File "/home/kavia/workspace/code-generation/bookmatchai-114780-8d7cab39/bookswap_backend_workspace/bookswap_backend/src/api/main.py", line 10, in <module>
     models.Base.metadata.create_all(bind=engine)
   File "/home/kavia/workspace/code-generation/bookmatchai-114780-8d7cab39/bookswap_backend_workspace/bookswap_backend/venv/lib/python3.12/site-packages/sqlalchemy/sql/schema.py", line 5825, in create_all
     bind._run_ddl_visitor(
