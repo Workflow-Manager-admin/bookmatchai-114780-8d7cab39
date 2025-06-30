@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON, Text, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
@@ -94,4 +94,19 @@ class SwapOffer(Base):
         "Book",
         back_populates="offers_as_requested",
         foreign_keys=[requested_book_id]
+    )
+
+
+class SemanticCache(Base):
+    """Cache table for LLM semantic analysis results"""
+    __tablename__ = "semantic_cache"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cache_key = Column(String, unique=True, nullable=False, index=True)
+    data = Column(JSON, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Index for efficient cache lookups and cleanup
+    __table_args__ = (
+        Index('ix_semantic_cache_created_at', 'created_at'),
     )
