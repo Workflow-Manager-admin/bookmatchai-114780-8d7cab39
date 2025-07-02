@@ -1,3 +1,2 @@
-//
-// Placeholder for auth context/hooks. Implement Clerk logic here.
-//
+// Entry-point for AuthProvider exports
+export * from "./AuthProvider";

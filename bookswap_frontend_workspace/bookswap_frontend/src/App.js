@@ -9,11 +9,12 @@ import Offers from "./pages/Offers";
 import Recommendations from "./pages/Recommendations";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
+import { AuthProvider, RequireAuth } from "./auth/AuthProvider";
 
 // PUBLIC_INTERFACE
 function App() {
   /**
-   * Top-level React app with Routing and theme support.
+   * Top-level React app with Routing and theme support + Clerk support.
    */
   const [theme, setTheme] = useState("light");
 
@@ -27,21 +28,53 @@ function App() {
   };
 
   return (
-    <Router>
-      <Layout theme={theme} onToggleTheme={toggleTheme}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/books" element={<BookListings />} />
-          <Route path="/my-books" element={<MyBooks />} />
-          <Route path="/offers" element={<Offers />} />
-          <Route path="/recommendations" element={<Recommendations />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
-          {/* 404 fallback */}
-          <Route path="*" element={<h2>Page Not Found</h2>} />
-        </Routes>
-      </Layout>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Layout theme={theme} onToggleTheme={toggleTheme}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/books" element={<BookListings />} />
+            {/* Protected routes */}
+            <Route
+              path="/my-books"
+              element={
+                <RequireAuth>
+                  <MyBooks />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/offers"
+              element={
+                <RequireAuth>
+                  <Offers />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/recommendations"
+              element={
+                <RequireAuth>
+                  <Recommendations />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <RequireAuth>
+                  <Profile />
+                </RequireAuth>
+              }
+            />
+            {/* Public login route */}
+            <Route path="/login" element={<Login />} />
+            {/* 404 fallback */}
+            <Route path="*" element={<h2>Page Not Found</h2>} />
+          </Routes>
+        </Layout>
+      </Router>
+    </AuthProvider>
   );
 }
 
